@@ -10,6 +10,7 @@ const tumKisilerDizisi = [];
 //console.log(ad,soyad,mail);
 
 form.addEventListener('submit', kaydet);
+kisiListesi.addEventListener('click', kisiIslemleriniYap);
 
 function kaydet(e) {
 
@@ -108,5 +109,46 @@ function kisiyiEkle(eklenecekKisi) {
     `
     kisiListesi.appendChild(olusturulanTrElementi);
     tumKisilerDizisi.push(eklenecekKisi);
+    console.log("Diziye yeni eleman eklendi: ");
+    console.log(tumKisilerDizisi);
     bilgileriGoster("Kişi Rehbere Kaydedildi.",true);
+}
+
+function kisiIslemleriniYap(event) {
+
+    //console.log(event.target);
+
+    if(event.target.classList.contains('btn--delete')) {
+
+        const silinecekTrElement = event.target.parentElement.parentElement;
+        const silinecekTrMail = event.target.parentElement.previousElementSibling.textContent;
+
+        rehberdenSil(silinecekTrElement, silinecekTrMail);
+
+        //console.log("silme butonu");
+
+    } else if (event.target.classList.contains('btn--edit')) {
+
+        console.log("güncelleme butonu");
+
+    }
+
+}
+
+function rehberdenSil(silinecekTrElement, silinecekTrMail) {
+
+    const silinmeyecekKisiler = tumKisilerDizisi.filter((kisi,index) => {
+
+        return kisi.mail !== silinecekTrMail;
+
+    });
+
+    tumKisilerDizisi.length = 0;
+
+    tumKisilerDizisi.push(...silinmeyecekKisiler);
+
+    console.log(tumKisilerDizisi);
+
+    silinecekTrElement.remove();
+
 }

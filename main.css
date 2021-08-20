@@ -36,3 +36,7 @@
     border:1px solid red;
 
 }
+
+.far{
+    pointer-events:none;
+}
