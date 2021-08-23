@@ -6,8 +6,7 @@ const kisiListesi = document.querySelector('.kisi-listesi');
 const form = document.querySelector('#form-rehber');
 
 const tumKisilerDizisi = [];
-
-//console.log(ad,soyad,mail);
+let secilenSatir = 'undefined';
 
 form.addEventListener('submit', kaydet);
 kisiListesi.addEventListener('click', kisiIslemleriniYap);
@@ -16,22 +15,31 @@ function kaydet(e) {
 
     e.preventDefault();
 
-    const eklenecekKisi = {
+    const eklenecekveyaGuncellenecekKisi = {
         ad: ad.value,
         soyad: soyad.value,
         mail: mail.value
     }
 
-   const sonuc = verileriKontrolEt(eklenecekKisi);
+
+   const sonuc = verileriKontrolEt(eklenecekveyaGuncellenecekKisi);
 
    if(sonuc.durum) {
 
-        kisiyiEkle(eklenecekKisi);
+
+        if(secilenSatir !== 'undefined') {
+
+            kisiyiGuncelle(eklenecekveyaGuncellenecekKisi);
+
+        } else {
+
+            kisiyiEkle(eklenecekveyaGuncellenecekKisi);
+            
+        }
 
    } else {
 
         bilgileriGoster(sonuc.mesaj,sonuc.durum);
-        //console.log(sonuc.mesaj);
 
    }
 
@@ -116,8 +124,6 @@ function kisiyiEkle(eklenecekKisi) {
 
 function kisiIslemleriniYap(event) {
 
-    //console.log(event.target);
-
     if(event.target.classList.contains('btn--delete')) {
 
         const silinecekTrElement = event.target.parentElement.parentElement;
@@ -125,11 +131,18 @@ function kisiIslemleriniYap(event) {
 
         rehberdenSil(silinecekTrElement, silinecekTrMail);
 
-        //console.log("silme butonu");
-
     } else if (event.target.classList.contains('btn--edit')) {
 
-        console.log("güncelleme butonu");
+        document.querySelector('.kaydetGuncelle').value = 'Güncelle';
+
+        const secilenTR = event.target.parentElement.parentElement;
+        const guncellenecekMail = secilenTR.cells[2].textContent;
+
+        ad.value = secilenTR.cells[0].textContent;
+        soyad.value = secilenTR.cells[1].textContent;
+        mail.value = secilenTR.cells[2].textContent;
+
+        secilenSatir =secilenTR;
 
     }
 
@@ -151,4 +164,23 @@ function rehberdenSil(silinecekTrElement, silinecekTrMail) {
 
     silinecekTrElement.remove();
 
+}
+
+function kisiyiGuncelle(kisi) {
+
+    for(let i=0; i<tumKisilerDizisi.length; i++) {
+        if(tumKisilerDizisi[i].mail === secilenSatir.cells[2].textContent) {
+            
+            tumKisilerDizisi[i] = kisi;
+            console.log(tumKisilerDizisi);
+            break;
+        }
+    }
+
+    secilenSatir.cells[0].textContent = kisi.ad;
+    secilenSatir.cells[1].textContent = kisi.soyad;
+    secilenSatir.cells[2].textContent = kisi.mail;
+
+    document.querySelector('.kaydetGuncelle').value = 'Kaydet';
+    secilenSatir = 'undefined';
 }
