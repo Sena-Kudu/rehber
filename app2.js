@@ -54,9 +54,30 @@ class Ekran {
 
         } else if(tiklanmaYeri.classList.contains('btn--edit')) {
 
-            console.log('guncellenecek');
+            this.secilenSatir = tiklanmaYeri.parentElement.parentElement;
+
+            this.ekleGuncelleButon.value = 'Güncelle';
+
+            this.ad.value = this.secilenSatir.cells[0].textContent;
+            this.soyad.value = this.secilenSatir.cells[1].textContent;
+            this.mail.value = this.secilenSatir.cells[2].textContent;
 
         }
+    }
+
+    kisiyiEkrandaGuncelle(kisi) {
+
+
+        this.depo.kisiGuncelle(kisi, this.secilenSatir.cells[2].textContent);
+
+        this.secilenSatir.cells[0].textContent = kisi.ad;
+        this.secilenSatir.cells[1].textContent = kisi.soyad;
+        this.secilenSatir.cells[2].textContent = kisi.mail;
+
+
+        this.secilenSatir = 'undefined';
+        this.ekleGuncelleButon.value = 'Kaydet';
+
     }
 
     kisiyiEkrandanSil() {
@@ -64,6 +85,7 @@ class Ekran {
         this.secilenSatir.remove();
         const silinecekMail = this.secilenSatir.cells[2].textContent;
         this.depo.kisiSil(silinecekMail);
+        this.secilenSatir = 'undefined';
 
     }
 
@@ -103,8 +125,17 @@ class Ekran {
 
         if(sonuc) {
 
+            if(this.secilenSatir !== 'undefined') {
+
+                this.kisiyiEkrandaGuncelle(kisi);
+                
+
+            } else {
+
             this.kisiyiEkranaEkle(kisi);
             this.depo.kisiEkle(kisi);
+
+            }
 
         } else {
 
